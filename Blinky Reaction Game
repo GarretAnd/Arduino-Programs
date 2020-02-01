@@ -1,0 +1,48 @@
+/* Blinky
+ * Turns on LED for some period, then off again, repeatedly
+ */
+
+#include <avr/io.h>			// All the port definitions are here (DDRB, PORTB)
+#include <util/delay.h>
+
+/* CONSTANTS */
+#define LED_ON_TIME   200		/* milliseconds */
+#define LED_OFF_TIME  800
+
+/* Variable Speed Blinky by Garret Andreine
+ * Works by having another counter variable being (switcher) being added onto LED_ON_TIME to increase the amount of time the LED is on
+ * and subtract from the LED_OFF_TIME to decrease the amount of time the LED is off. Everytime it runs through the loop it gains a value
+ * of 10 until it hits a value greater than 175. At that point it gets reset back to zero and the process starts all over again, creating
+ * the effect of starting slowly and speeding up.
+ */ 
+
+
+int main(void)
+{
+  	// Setup code (run once) goes here
+  	DDRB |= (1 << DDB5);	// configure bit 5 as output
+	DDRB |= (1 << DDB4);	// configure bit 4 as output
+	DDRB |= (1 << DDB3);	// configure bit 3 as output
+	DDRB |= (1 << DDB2);	// configure bit 3 as output
+	
+	int switcher = 1;
+	// Main code (runs repeatedly) goes here
+	
+	while(1) {
+	  /* As with DDRB, PORTB is the uint8_t type contents of address 0x25. */
+	  PORTB |= (1 << PORTB5);		// set bit 5 to turn LED on
+	  _delay_ms(LED_OFF_TIME);
+	  PORTB &= ~(1 << PORTB5);		// clear bit 5 to turn LED off
+	  PORTB |= (1 << PORTB4);		// set bit 4 to turn LED on
+	  _delay_ms(LED_OFF_TIME);
+	  PORTB &= ~(1 << PORTB4);		// clear bit 4 to turn LED off
+	  PORTB |= (1 << PORTB3);		// set bit 3 to turn LED on
+	  _delay_ms(LED_OFF_TIME);
+ 	  PORTB &= ~(1 << PORTB3);		// clear bit 3 to turn LED off
+	  PORTB |= (1 << PORTB2);		// set bit 2 to turn LED on
+	  _delay_ms(LED_OFF_TIME);
+ 	  PORTB &= ~(1 << PORTB2);		// clear bit 2 to turn LED off
+	}
+	  
+	return 0;		/* never reached */
+}
